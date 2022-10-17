@@ -19,7 +19,7 @@
 package addr
 
 import (
-	"github.com/DomesticMoth/ytl/static"
+	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"github.com/yggdrasil-network/yggdrasil-go/src/address"
 	"net"
 )

@@ -20,7 +20,7 @@ package debugstuff
 
 import (
 	"bytes"
-	"github.com/DomesticMoth/ytl/static"
+	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"testing"
 )
 

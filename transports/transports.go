@@ -20,7 +20,7 @@
 package transports
 
 import (
-	"github.com/DomesticMoth/ytl/static"
+	"github.com/Yggdrasil-Unofficial/ytl/static"
 )
 
 // Returns default slice of transports

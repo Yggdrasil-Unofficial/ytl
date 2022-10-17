@@ -20,7 +20,7 @@ package dialers
 
 import (
 	"context"
-	"github.com/DomesticMoth/ytl/addr"
+	"github.com/Yggdrasil-Unofficial/ytl/addr"
 	"golang.org/x/net/proxy"
 	"net"
 	"net/url"

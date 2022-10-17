@@ -141,8 +141,8 @@ import (
 	"context"
 	"crypto/ed25519"
 	"encoding/hex"
-	"github.com/DomesticMoth/ytl/static"
-	"github.com/DomesticMoth/ytl/transports"
+	"github.com/Yggdrasil-Unofficial/ytl/static"
+	"github.com/Yggdrasil-Unofficial/ytl/transports"
 	"net/url"
 	"time"
 )

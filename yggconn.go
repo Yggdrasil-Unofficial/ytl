@@ -21,8 +21,8 @@ package ytl
 import (
 	"bytes"
 	"crypto/ed25519"
-	"github.com/DomesticMoth/ytl/addr"
-	"github.com/DomesticMoth/ytl/static"
+	"github.com/Yggdrasil-Unofficial/ytl/addr"
+	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"io"
 	"net"
 	"time"

@@ -23,7 +23,7 @@ import (
 	"crypto/ed25519"
 	"encoding/hex"
 	"fmt"
-	"github.com/DomesticMoth/ytl/static"
+	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"io"
 	"net"
 	"net/url"

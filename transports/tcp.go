@@ -21,8 +21,8 @@ package transports
 import (
 	"context"
 	"crypto/ed25519"
-	"github.com/DomesticMoth/ytl/dialers"
-	"github.com/DomesticMoth/ytl/static"
+	"github.com/Yggdrasil-Unofficial/ytl/dialers"
+	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"net"
 	"net/url"
 )

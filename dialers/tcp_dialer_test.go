@@ -19,7 +19,7 @@
 package dialers
 
 import (
-	"github.com/DomesticMoth/ytl/static"
+	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"github.com/foxcpp/go-mockdns"
 	"net"
 	"net/url"
