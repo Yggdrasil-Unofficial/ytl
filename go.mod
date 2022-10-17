@@ -1,4 +1,4 @@
-module github.com/DomesticMoth/ytl
+module github.com/Yggdrasil-Unofficial/ytl
 
 go 1.16
 
