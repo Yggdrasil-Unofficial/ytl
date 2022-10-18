@@ -19,10 +19,47 @@
 package debugstuff
 
 import (
+	"time"
 	"bytes"
 	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"testing"
 )
+
+func TestMockConn(t *testing.T) {
+	bufA := MockConnContent()
+	bufB := make([]byte, len(bufA))
+	conn := MockConn()
+	conn.Read(bufB)
+	if bytes.Compare(bufA, bufB) != 0 {
+		t.Fatalf("Must be equal")
+	}
+	conn.Close()
+	time.Sleep(100)
+}
+
+func TestMockConnWrongVerContent(t *testing.T) {
+	bufA := MockConnWrongVerContent()
+	bufB := make([]byte, len(bufA))
+	conn := MockWrongVerConn()
+	conn.Read(bufB)
+	if bytes.Compare(bufA, bufB) != 0 {
+		t.Fatalf("Must be equal")
+	}
+	conn.Close()
+	time.Sleep(100)
+}
+
+func TestMockConnTooShortContent(t *testing.T) {
+	bufA := MockConnTooShortContent()
+	bufB := make([]byte, len(bufA))
+	conn := MockTooShortConn()
+	conn.Read(bufB)
+	if bytes.Compare(bufA, bufB) != 0 {
+		t.Fatalf("Must be equal")
+	}
+	conn.Close()
+	time.Sleep(100)
+}
 
 func TestMockPubKeyGeneration(t *testing.T) {
 	key := MockPubKey()
