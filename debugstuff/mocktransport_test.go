@@ -19,6 +19,7 @@
 package debugstuff
 
 import (
+	"net"
 	"bytes"
 	"context"
 	"crypto/ed25519"
@@ -31,6 +32,37 @@ import (
 )
 
 // Yeah. Unit tests of unit tests.
+
+func TestMockTransportListener(t *testing.T) {
+	uri, _ := url.Parse("a://b")
+	transport := MockTransport{"", 0}
+	_, err := transport.Listen(
+		context.Background(),
+		*uri,
+		nil,
+	)
+	if err != nil {
+		t.Fatalf("Must be nill always. But: %s", err)
+	}
+}
+
+func TestMockTransportInfoCLosed(t *testing.T) {
+	a, b := net.Pipe()
+	a.Close()
+	b.Close()
+	if ReadMockTransportInfo(a) != "" {
+		t.Fatalf("Must be void string")
+	}
+}
+
+func TestMockTransportInfoAfterHeaderCLosed(t *testing.T) {
+	a, b := net.Pipe()
+	a.Close()
+	b.Close()
+	if ReadMockTransportInfoAfterHeader(a) != "" {
+		t.Fatalf("Must be void string")
+	}
+}
 
 func TestGetDurationFromUri(t *testing.T) {
 	textDelay := "2s"
@@ -176,5 +208,13 @@ func TestMockTransportCloseCTX(t *testing.T) {
 		if recvInfo != correctInfo {
 			t.Errorf("Wrong transport info '%s' '%s'", correctInfo, recvInfo)
 		}
+	}
+}
+
+func TestMockTransportGetScheme(t *testing.T) {
+	scheme := "scheme"
+	transport := MockTransport{scheme, 0}
+	if transport.GetScheme() != scheme {
+		t.Fatalf("Must be void string")
 	}
 }
