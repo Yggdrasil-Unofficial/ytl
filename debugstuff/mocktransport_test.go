@@ -33,6 +33,12 @@ import (
 
 // Yeah. Unit tests of unit tests.
 
+type BrokenReader struct {}
+
+func (BrokenReader)Read(b []byte) (n int, err error) {
+	return 0, fmt.Errorf("Error!")
+}
+
 func TestMockTransportListener(t *testing.T) {
 	uri, _ := url.Parse("a://b")
 	transport := MockTransport{"", 0}
@@ -47,10 +53,7 @@ func TestMockTransportListener(t *testing.T) {
 }
 
 func TestMockTransportInfoCLosed(t *testing.T) {
-	a, b := net.Pipe()
-	a.Close()
-	b.Close()
-	if ReadMockTransportInfo(a) != "" {
+	if ReadMockTransportInfo(BrokenReader{}) != "" {
 		t.Fatalf("Must be void string")
 	}
 }
