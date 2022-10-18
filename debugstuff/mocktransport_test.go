@@ -218,3 +218,19 @@ func TestMockTransportGetScheme(t *testing.T) {
 		t.Fatalf("Must be void string")
 	}
 }
+
+func TestListenerAccept(t *testing.T) {
+	uri, _ := url.Parse("scheme://b")
+	transport := MockTransport{"scheme", 0}
+	listener, _ := transport.Listen(
+		context.Background(),
+		*uri,
+		nil,
+	)
+	_, err := listener.Accept()
+	if err != nil {
+		t.Fatalf("Unexpected error: %s", err)
+	}
+	listener.Close()
+	listener.Addr()
+}

@@ -54,9 +54,9 @@ func FormatMockTransportInfo(
 
 // Read all data from connetion up to EOF to string.
 func ReadMockTransportInfo(conn net.Conn) string {
-	b, err := io.ReadAll(conn)
-	if err == nil {
-		return ""
+	b, _ := io.ReadAll(conn)
+	if b == nil {
+		b = []byte{}
 	}
 	return string(b)
 }
