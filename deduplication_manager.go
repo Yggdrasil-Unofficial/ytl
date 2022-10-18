@@ -19,10 +19,10 @@
 package ytl
 
 import (
-	"sync"
 	"bytes"
 	"crypto/ed25519"
 	"encoding/hex"
+	"sync"
 )
 
 func keyToStr(key ed25519.PublicKey) string {
@@ -42,7 +42,7 @@ type DeduplicationManager struct {
 	connId      uint64
 	secureMode  bool
 	blockKey    ed25519.PublicKey
-	mutex sync.Mutex
+	mutex       sync.Mutex
 }
 
 // If secureMode is disabled
@@ -54,10 +54,10 @@ type DeduplicationManager struct {
 // This param may be used to prevent node connect to itself.
 func NewDeduplicationManager(secureMode bool, blockKey ed25519.PublicKey) *DeduplicationManager {
 	return &DeduplicationManager{
-		connections: make(map[string]connInfo), 
-		connId: 0,
-		secureMode: secureMode,
-		blockKey: blockKey,
+		connections: make(map[string]connInfo),
+		connId:      0,
+		secureMode:  secureMode,
+		blockKey:    blockKey,
 	}
 }
 

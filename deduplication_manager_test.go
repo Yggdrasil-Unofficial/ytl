@@ -36,7 +36,7 @@ func TestBlockKeyCollision(t *testing.T) {
 func TestDeduplicationManagerUnsecureMode(t *testing.T) {
 	key := make(ed25519.PublicKey, ed25519.PublicKeySize)
 	manager := NewDeduplicationManager(false, nil)
-	manager.connections[keyToStr(key)] = connInfo{ nil, 0, 0 }
+	manager.connections[keyToStr(key)] = connInfo{nil, 0, 0}
 	res := manager.Check(key, 0, nil)
 	if res != nil {
 		t.Errorf("Second connection must be closed")
@@ -46,13 +46,13 @@ func TestDeduplicationManagerUnsecureMode(t *testing.T) {
 func TestDeduplicationManagerCallback(t *testing.T) {
 	key := make(ed25519.PublicKey, ed25519.PublicKeySize)
 	manager := NewDeduplicationManager(true, nil)
-	callback := manager.Check(key, 0, func(){})
+	callback := manager.Check(key, 0, func() {})
 	callback()
 	if _, ok := manager.connections[keyToStr(key)]; ok {
 		t.Errorf("Connection must be removed")
 	}
-	manager.Check(key, 0, func(){})
-	callback = manager.Check(key, 1, func(){})
+	manager.Check(key, 0, func() {})
+	callback = manager.Check(key, 1, func() {})
 	callback()
 	if _, ok := manager.connections[keyToStr(key)]; ok {
 		t.Errorf("Connection must be removed")
@@ -63,12 +63,12 @@ func TestDeduplicationManagerOnClose(t *testing.T) {
 	key := "KEY"
 	var conid uint64 = 0
 	cm := make(chan struct{}, 10)
-	onclose := func(){ cm <- struct{}{} }
+	onclose := func() { cm <- struct{}{} }
 	manager := NewDeduplicationManager(true, nil)
-	manager.connections[key] = connInfo{ onclose, 0, conid }
+	manager.connections[key] = connInfo{onclose, 0, conid}
 	manager.onClose(key, conid+1)
 	manager.onClose(key, conid)
-	manager.connections[key] = connInfo{ nil, 0, conid }
+	manager.connections[key] = connInfo{nil, 0, conid}
 	manager.onClose(key, conid)
 	if len(cm) != 1 {
 		t.Errorf("Wrong count of callback cals")

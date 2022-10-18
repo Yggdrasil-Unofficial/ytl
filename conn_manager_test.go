@@ -26,6 +26,7 @@ import (
 	"fmt"
 	"github.com/Yggdrasil-Unofficial/ytl/debugstuff"
 	"github.com/Yggdrasil-Unofficial/ytl/static"
+	"github.com/Yggdrasil-Unofficial/ytl/transports"
 	"net"
 	"net/url"
 	"testing"
@@ -38,6 +39,45 @@ func TestKeyFromOptionalKey(t *testing.T) {
 	} {
 		if KeyFromOptionalKey(opt) == nil {
 			t.Fatalf("Key must not be nil")
+		}
+	}
+}
+
+func TestConnManagerListening(t *testing.T) {
+	manager := NewConnManager(context.Background(), nil, nil, nil, nil)
+	manager.transports["b"] = debugstuff.MockTransport{"b", 0}
+	uri, _ := url.Parse("a://b")
+	_, err := manager.Listen(*uri)
+	if err == nil {
+		t.Fatalf("Must raise error")
+	}
+	uri, _ = url.Parse("tcp://8.8.8.8:42")
+	_, err = manager.Listen(*uri)
+	if err == nil {
+		t.Fatalf("Must raise error")
+	}
+	uri, _ = url.Parse("b://a")
+	_, err = manager.Listen(*uri)
+	if err != nil {
+		t.Fatalf("Mustnt raise error")
+	}
+}
+
+func TestConnManagerDefultTransports(t *testing.T) {
+	ctx := context.Background()
+	a := NewConnManager(ctx, nil, nil, nil, nil)
+	b := NewConnManagerWithTransports(ctx, nil, nil, nil, nil, transports.DEFAULT_TRANSPORTS())
+	if len(a.transports) != len(b.transports) {
+		t.Fatalf("Must be same maps")
+	}
+	for key := range a.transports {
+		if _, ok := b.transports[key]; !ok {
+			t.Fatalf("Must be same maps")
+		}
+	}
+	for key := range b.transports {
+		if _, ok := a.transports[key]; !ok {
+			t.Fatalf("Must be same maps")
 		}
 	}
 }

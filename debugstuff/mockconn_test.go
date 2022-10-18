@@ -19,10 +19,10 @@
 package debugstuff
 
 import (
-	"time"
 	"bytes"
 	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"testing"
+	"time"
 )
 
 func TestMockConn(t *testing.T) {

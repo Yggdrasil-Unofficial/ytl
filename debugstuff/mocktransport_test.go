@@ -19,13 +19,13 @@
 package debugstuff
 
 import (
-	"net"
 	"bytes"
 	"context"
 	"crypto/ed25519"
 	"encoding/hex"
 	"fmt"
 	"io"
+	"net"
 	"net/url"
 	"testing"
 	"time"
@@ -33,9 +33,9 @@ import (
 
 // Yeah. Unit tests of unit tests.
 
-type BrokenReader struct {}
+type BrokenReader struct{}
 
-func (BrokenReader)Read(b []byte) (n int, err error) {
+func (BrokenReader) Read(b []byte) (n int, err error) {
 	return 0, fmt.Errorf("Error!")
 }
 
