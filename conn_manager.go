@@ -352,11 +352,13 @@ func (c *ConnManager) Listen(uri url.URL) (ygg YggListener, err error) {
 }
 
 var generateKey func() (
-	ed25519.PublicKey, 
-	ed25519.PrivateKey, 
+	ed25519.PublicKey,
+	ed25519.PrivateKey,
 	error,
 ) = func() (
 	ed25519.PublicKey,
 	ed25519.PrivateKey,
 	error,
-) { return ed25519.GenerateKey(nil) }
+) {
+	return ed25519.GenerateKey(nil)
+}

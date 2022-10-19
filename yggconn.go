@@ -135,7 +135,7 @@ func ConnToYggConn(
 	allow *static.AllowList,
 	secureTranport uint,
 	dm *DeduplicationManager,
-	) *YggConn {
+) *YggConn {
 	if conn == nil {
 		return nil
 	}
@@ -341,5 +341,3 @@ func (y *YggListener) Close() error {
 func (y *YggListener) Addr() net.Addr {
 	return y.inner_listener.Addr()
 }
-
-

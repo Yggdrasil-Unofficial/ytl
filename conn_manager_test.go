@@ -24,13 +24,13 @@ import (
 	"crypto/ed25519"
 	"encoding/hex"
 	"fmt"
-	"time"
 	"github.com/Yggdrasil-Unofficial/ytl/debugstuff"
 	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"github.com/Yggdrasil-Unofficial/ytl/transports"
 	"net"
 	"net/url"
 	"testing"
+	"time"
 )
 
 func TestKeyFromOptionalKey(t *testing.T) {
@@ -50,7 +50,7 @@ func TestKeyFromOptionalKey(t *testing.T) {
 	) {
 		return nil, nil, fmt.Errorf("Error!")
 	}
-	defer func(){generateKey = oldGK}()
+	defer func() { generateKey = oldGK }()
 	zkey := make(ed25519.PrivateKey, ed25519.PrivateKeySize)
 	pkey := KeyFromOptionalKey(nil)
 	if bytes.Compare(zkey, pkey) != 0 {

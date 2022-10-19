@@ -36,7 +36,7 @@ import (
 func TestAlwaysByte(t *testing.T) {
 	a := alwaysByte(nil)
 	b := alwaysByte([]byte{})
-	if bytes.Compare(a, b) != 0{
+	if bytes.Compare(a, b) != 0 {
 		t.Fatalf("Must return []byte{} in both cases")
 	}
 }

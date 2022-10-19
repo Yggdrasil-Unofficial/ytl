@@ -33,7 +33,7 @@ import (
 
 func TestParceMetaPackageWrongProto(t *testing.T) {
 	a, b := net.Pipe()
-	go func(){
+	go func() {
 		a.Write([]byte{'a', 't', 'a', 'm', 0, 4})
 		a.Write(make(ed25519.PublicKey, ed25519.PublicKeySize))
 	}()
@@ -272,7 +272,7 @@ func TestYggConnWrite(t *testing.T) {
 		make(chan ed25519.PublicKey, 1),
 		isClosed,
 	}
-	_, err := yc.Write([]byte{1,2,3})
+	_, err := yc.Write([]byte{1, 2, 3})
 	if err == nil {
 		t.Fatalf("Must rase error")
 	}
@@ -311,7 +311,7 @@ func TestYggListenerOk(t *testing.T) {
 	uri, _ := url.Parse("a://b")
 	tr := debugstuff.MockTransport{"a", 0}
 	ls, _ := tr.Listen(nil, *uri, nil)
-	listener := YggListener{ ls, nil, nil }
+	listener := YggListener{ls, nil, nil}
 	_, err := listener.Accept()
 	if err != nil {
 		t.Fatalf("Unecpected error: %s", err)
@@ -326,7 +326,7 @@ func TestYggListenerErr(t *testing.T) {
 	uri, _ := url.Parse("a://b?error=true")
 	tr := debugstuff.MockTransport{"a", 0}
 	ls, _ := tr.Listen(nil, *uri, nil)
-	listener := YggListener{ ls, nil, nil }
+	listener := YggListener{ls, nil, nil}
 	_, err := listener.Accept()
 	if err == nil {
 		t.Fatalf("Must raise error")
