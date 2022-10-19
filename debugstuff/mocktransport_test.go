@@ -33,6 +33,14 @@ import (
 
 // Yeah. Unit tests of unit tests.
 
+func TestAlwaysByte(t *testing.T) {
+	a := alwaysByte(nil)
+	b := alwaysByte([]byte{})
+	if bytes.Compare(a, b) != 0{
+		t.Fatalf("Must return []byte{} in both cases")
+	}
+}
+
 type BrokenReader struct{}
 
 func (BrokenReader) Read(b []byte) (n int, err error) {

@@ -52,13 +52,17 @@ func FormatMockTransportInfo(
 	)
 }
 
+func alwaysByte(b []byte) []byte {
+	if b == nil {
+		return []byte{}
+	}
+	return b
+}
+
 // Read all data from connetion up to EOF to string.
 func ReadMockTransportInfo(r io.Reader) string {
 	b, _ := io.ReadAll(r)
-	if b == nil {
-		b = []byte{}
-	}
-	return string(b)
+	return string(alwaysByte(b))
 }
 
 // Read ygg handshake pkg and then all data up to EOF to string.

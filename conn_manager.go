@@ -147,16 +147,6 @@ import (
 	"time"
 )
 
-var generateKey func() (
-	ed25519.PublicKey, 
-	ed25519.PrivateKey, 
-	error,
-) = func() (
-	ed25519.PublicKey,
-	ed25519.PrivateKey,
-	error,
-) { return ed25519.GenerateKey(nil) }
-
 // If key is not nil, retruns it as is.
 // If key is nil, generate new random key.
 func KeyFromOptionalKey(key ed25519.PrivateKey) ed25519.PrivateKey {
@@ -360,3 +350,13 @@ func (c *ConnManager) Listen(uri url.URL) (ygg YggListener, err error) {
 	err = static.UnknownSchemeError{Scheme: uri.Scheme}
 	return
 }
+
+var generateKey func() (
+	ed25519.PublicKey, 
+	ed25519.PrivateKey, 
+	error,
+) = func() (
+	ed25519.PublicKey,
+	ed25519.PrivateKey,
+	error,
+) { return ed25519.GenerateKey(nil) }
