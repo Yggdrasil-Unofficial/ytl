@@ -24,6 +24,7 @@ import (
 	"crypto/ed25519"
 	"encoding/hex"
 	"fmt"
+	"time"
 	"github.com/Yggdrasil-Unofficial/ytl/debugstuff"
 	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"github.com/Yggdrasil-Unofficial/ytl/transports"
@@ -289,5 +290,27 @@ func TestConnManagerIgnoreAllowList(t *testing.T) {
 		if err != nil {
 			t.Errorf("Unexpected error: %s", err)
 		}
+	}
+}
+
+func TestConnManagerConnectTimeout(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping TestConnManagerConnectTimeout in short mode.")
+	}
+	transports := []static.Transport{
+		debugstuff.MockTransport{Scheme: "a", SecureLvl: 0},
+	}
+	durationText := "1s"
+	duration, err := time.ParseDuration(durationText)
+	uri, _ := url.Parse("a://host")
+	manager := NewConnManagerWithTransports(context.Background(), nil, nil, nil, nil, transports)
+	_, err = manager.ConnectTimeout(*uri, duration)
+	if err != nil {
+		t.Errorf("Unexpected error: %s", err)
+	}
+	uri, _ = url.Parse("a://host?mock_delay_conn=2s")
+	_, err = manager.ConnectTimeout(*uri, duration)
+	if err == nil {
+		t.Errorf("Must raise timeout error")
 	}
 }

@@ -328,10 +328,6 @@ func (c *ConnManager) ConnectTimeout(uri url.URL, timeout time.Duration) (*YggCo
 	case <-ctx.Done():
 		cancel_conn()
 		return nil, static.ConnTimeoutError{}
-	case <-c.ctx.Done():
-		cancel()
-		cancel_conn()
-		return nil, static.ConnTimeoutError{}
 	case result := <-result:
 		cancel()
 		return result.Conn, result.Error
