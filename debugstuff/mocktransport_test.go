@@ -86,6 +86,20 @@ func TestGetDurationFromUri(t *testing.T) {
 	}
 }
 
+func TestMockTransportError(t *testing.T) {
+	transport := MockTransport{"scheme", 0}
+	uri, _ := url.Parse("scheme://host?error=true")
+	_, err := transport.Connect(
+		context.Background(),
+		*uri,
+		nil,
+		make(ed25519.PrivateKey, ed25519.PrivateKeySize),
+	)
+	if err == nil {
+		t.Fatalf("Must raise error")
+	}
+}
+
 func TestMockTransportPeerKey(t *testing.T) {
 	transport := MockTransport{"scheme", 0}
 	peerKey := MockPubKey()
