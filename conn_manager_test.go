@@ -42,6 +42,20 @@ func TestKeyFromOptionalKey(t *testing.T) {
 			t.Fatalf("Key must not be nil")
 		}
 	}
+	oldGK := generateKey
+	generateKey = func() (
+		ed25519.PublicKey,
+		ed25519.PrivateKey,
+		error,
+	) {
+		return nil, nil, fmt.Errorf("Error!")
+	}
+	defer func(){generateKey = oldGK}()
+	zkey := make(ed25519.PrivateKey, ed25519.PrivateKeySize)
+	pkey := KeyFromOptionalKey(nil)
+	if bytes.Compare(zkey, pkey) != 0 {
+		t.Fatalf("In error cases must be return key filled with zeros")
+	}
 }
 
 func TestConnManagerListening(t *testing.T) {

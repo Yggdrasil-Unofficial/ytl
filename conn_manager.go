@@ -147,15 +147,25 @@ import (
 	"time"
 )
 
+var generateKey func() (
+	ed25519.PublicKey, 
+	ed25519.PrivateKey, 
+	error,
+) = func() (
+	ed25519.PublicKey,
+	ed25519.PrivateKey,
+	error,
+) { return ed25519.GenerateKey(nil) }
+
 // If key is not nil, retruns it as is.
 // If key is nil, generate new random key.
 func KeyFromOptionalKey(key ed25519.PrivateKey) ed25519.PrivateKey {
 	if key != nil {
 		return key
 	}
-	_, spriv, err := ed25519.GenerateKey(nil)
+	_, spriv, err := generateKey()
 	if err != nil {
-		panic(err)
+		spriv = make(ed25519.PrivateKey, ed25519.PrivateKeySize)
 	}
 	return spriv
 }
