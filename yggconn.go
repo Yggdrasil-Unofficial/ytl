@@ -129,7 +129,13 @@ type YggConn struct {
 // or duplicates oter connection with the same node,
 // it will be closed.
 // Otherwise, it will be available as a normal connection.
-func ConnToYggConn(conn net.Conn, transport_key ed25519.PublicKey, allow *static.AllowList, secureTranport uint, dm *DeduplicationManager) *YggConn {
+func ConnToYggConn(
+	conn net.Conn,
+	transport_key ed25519.PublicKey,
+	allow *static.AllowList,
+	secureTranport uint,
+	dm *DeduplicationManager,
+	) *YggConn {
 	if conn == nil {
 		return nil
 	}
@@ -284,11 +290,7 @@ func (y *YggConn) Read(b []byte) (n int, err error) {
 }
 
 func (y *YggConn) Write(b []byte) (n int, err error) {
-	n, err = y.innerConn.Write(b)
-	if y.err != nil {
-		err = y.err
-	}
-	return
+	return y.innerConn.Write(b)
 }
 
 func (y *YggConn) LocalAddr() net.Addr {
@@ -300,27 +302,15 @@ func (y *YggConn) RemoteAddr() net.Addr {
 }
 
 func (y *YggConn) SetDeadline(t time.Time) (err error) {
-	err = y.innerConn.SetDeadline(t)
-	if y.err != nil {
-		err = y.err
-	}
-	return
+	return y.innerConn.SetDeadline(t)
 }
 
 func (y *YggConn) SetReadDeadline(t time.Time) (err error) {
-	err = y.innerConn.SetReadDeadline(t)
-	if y.err != nil {
-		err = y.err
-	}
-	return
+	return y.innerConn.SetReadDeadline(t)
 }
 
 func (y *YggConn) SetWriteDeadline(t time.Time) (err error) {
-	err = y.innerConn.SetWriteDeadline(t)
-	if y.err != nil {
-		err = y.err
-	}
-	return
+	return y.innerConn.SetWriteDeadline(t)
 }
 
 // Allows accepting incoming connections
@@ -351,3 +341,5 @@ func (y *YggListener) Close() error {
 func (y *YggListener) Addr() net.Addr {
 	return y.inner_listener.Addr()
 }
+
+

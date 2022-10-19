@@ -26,9 +26,22 @@ import (
 	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"io"
 	"net"
+	"net/url"
 	"testing"
 	"time"
 )
+
+func TestParceMetaPackageWrongProto(t *testing.T) {
+	a, b := net.Pipe()
+	go func(){
+		a.Write([]byte{'a', 't', 'a', 'm', 0, 4})
+		a.Write(make(ed25519.PublicKey, ed25519.PublicKeySize))
+	}()
+	err, _, _, _ := internalParseMetaPackage(b)
+	if err == nil {
+		t.Fatalf("Must raise UnknownProtoError")
+	}
+}
 
 type CaseTestParceMetaPackage struct {
 	conn    net.Conn
@@ -238,4 +251,85 @@ func TestYggConnNoCollisionSI(t *testing.T) {
 
 func TestYggConnNoCollisionSS(t *testing.T) {
 	yggConnTestCollision(t, 1, 0, 0)
+}
+
+func TestYggConnWrite(t *testing.T) {
+	a, b := net.Pipe()
+	b.Close()
+	a.Close()
+	isClosed := make(chan bool, 1)
+	isClosed <- false
+	yc := YggConn{
+		a,
+		nil,
+		nil,
+		0,
+		make(chan []byte, 1),
+		nil,
+		nil,
+		func() {},
+		make(chan *static.ProtoVersion, 1),
+		make(chan ed25519.PublicKey, 1),
+		isClosed,
+	}
+	_, err := yc.Write([]byte{1,2,3})
+	if err == nil {
+		t.Fatalf("Must rase error")
+	}
+}
+
+func TestYggConnGettersSetters(t *testing.T) {
+	d := time.Now()
+	//d, _ := time.Parse("1s")
+	a, _ := net.Pipe()
+	yc := ConnToYggConn(a, nil, nil, 0, nil)
+	if yc.LocalAddr() != a.LocalAddr() {
+		t.Errorf("Must be same")
+	}
+	if yc.RemoteAddr() != a.RemoteAddr() {
+		t.Errorf("Must be same")
+	}
+	if yc.SetDeadline(d) != a.SetDeadline(d) {
+		t.Errorf("Must be same")
+	}
+	if yc.SetReadDeadline(d) != a.SetReadDeadline(d) {
+		t.Errorf("Must be same")
+	}
+	if yc.SetWriteDeadline(d) != a.SetWriteDeadline(d) {
+		t.Errorf("Must be same")
+	}
+}
+
+func TestConnToYggConnNilConn(t *testing.T) {
+	yc := ConnToYggConn(nil, nil, nil, 0, nil)
+	if yc != nil {
+		t.Fatalf("Must be nill")
+	}
+}
+
+func TestYggListenerOk(t *testing.T) {
+	uri, _ := url.Parse("a://b")
+	tr := debugstuff.MockTransport{"a", 0}
+	ls, _ := tr.Listen(nil, *uri, nil)
+	listener := YggListener{ ls, nil, nil }
+	_, err := listener.Accept()
+	if err != nil {
+		t.Fatalf("Unecpected error: %s", err)
+	}
+	if listener.Addr() != listener.inner_listener.Addr() {
+		t.Fatalf("Must be same")
+	}
+	listener.Close()
+}
+
+func TestYggListenerErr(t *testing.T) {
+	uri, _ := url.Parse("a://b?error=true")
+	tr := debugstuff.MockTransport{"a", 0}
+	ls, _ := tr.Listen(nil, *uri, nil)
+	listener := YggListener{ ls, nil, nil }
+	_, err := listener.Accept()
+	if err == nil {
+		t.Fatalf("Must raise error")
+	}
+	listener.Close()
 }

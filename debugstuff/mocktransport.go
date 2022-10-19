@@ -180,6 +180,10 @@ func (t MockTransport) Connect(
 	delay_before_meta := getDurationFromUri(uri, "mock_delay_before_meta")
 	delay_after_meta := getDurationFromUri(uri, "mock_delay_after_meta")
 	ctx_closed := false
+	var e error = nil
+	if _, ok := uri.Query()["error"]; ok {
+		e = fmt.Errorf("Error!")
+	}
 	input, output := net.Pipe()
 	header := []byte{
 		109, 101, 116, 97, // 'm' 'e' 't' 'a'
@@ -212,7 +216,7 @@ func (t MockTransport) Connect(
 		Conn:          output,
 		Pkey:          transport_key,
 		SecurityLevel: t.SecureLvl,
-	}, nil
+	}, e
 }
 
 func (t MockTransport) Listen(ctx context.Context, uri url.URL, key ed25519.PrivateKey) (static.TransportListener, error) {
