@@ -25,10 +25,13 @@ import (
 	"github.com/Yggdrasil-Unofficial/ytl/debugstuff"
 	"github.com/Yggdrasil-Unofficial/ytl/static"
 	"io"
+	"os"
 	"net"
 	"net/url"
 	"testing"
 	"time"
+	"context"
+	"go.uber.org/goleak"
 )
 
 func TestParceMetaPackageWrongProto(t *testing.T) {
@@ -332,4 +335,57 @@ func TestYggListenerErr(t *testing.T) {
 		t.Fatalf("Must raise error")
 	}
 	listener.Close()
+}
+
+func TestYggConnLeak(t *testing.T) {
+    if os.Getenv("LEAKSTESTS") == "TRUE" {
+        defer goleak.VerifyNone(t)
+    }
+	count := 100000
+	if testing.Short() {
+		count = 100
+	}
+	ctx := context.Background()
+	uri, _ := url.Parse("a://b")
+	transport := debugstuff.MockTransport{"a", 0}
+	dm := NewDeduplicationManager(true, nil)
+	for i := 0; i < count; i++ {
+		conn, _ := transport.Connect(ctx, *uri, nil, nil)
+		yggcon := ConnToYggConn(conn.Conn, nil, nil, 0, dm)
+		yggcon.GetPublicKey()
+		conn.Conn.Close()
+		yggcon.Write([]byte{})
+	}
+}
+
+func TestYggDisplacementConnLeak(t *testing.T) {
+    if os.Getenv("LEAKSTESTS") == "TRUE" {
+        defer goleak.VerifyNone(t)
+    }
+	count := 100000
+	if testing.Short() {
+		count = 100
+	}
+	ctx := context.Background()
+	uri, _ := url.Parse("a://b")
+	transport := debugstuff.MockTransport{"a", 0}
+	dm := NewDeduplicationManager(true, nil)
+	var conn *static.ConnResult = nil
+	var yggcon *YggConn = nil
+	for i := 0; i < count; i++ {
+		c, _ := transport.Connect(ctx, *uri, nil, nil)
+		conn = &c
+		y := ConnToYggConn(conn.Conn, nil, nil, uint(i+1), dm)
+		yggcon = y
+		_, err := yggcon.Read(make([]byte, 4))
+		if err != nil {
+			t.Fatalf("Unexcepted error: %s", err)
+		}
+	}
+	if conn != nil {
+		conn.Conn.Close()
+	}
+	if yggcon != nil {
+		yggcon.Write([]byte{})
+	}
 }
