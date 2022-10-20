@@ -1,5 +1,3 @@
-// Copyright 2022 DomesticMoth
-//
 // This file is part of Ytl.
 //
 // Ytl is free software; you can redistribute it and/or
